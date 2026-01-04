@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../application/preview_controller.dart';
+import '../controllers/preview_controller.dart';
 
 /// Play, pause, and reset buttons.
 class PreviewPlaybackButtons extends StatelessWidget {

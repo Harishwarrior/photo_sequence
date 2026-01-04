@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../data/export_service.dart';
+import '../../application/export_service.dart';
 
 /// Shows export progress with circular indicator.
 class ExportProgressContent extends StatelessWidget {

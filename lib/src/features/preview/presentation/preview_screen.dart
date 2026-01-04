@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../home/domain/photo_sequence_project.dart';
 import '../../home/domain/transition_type.dart';
-import '../application/preview_controller.dart';
+import 'controllers/preview_controller.dart';
 import 'widgets/dissolve_transition.dart';
 import 'widgets/preview_controls.dart';
 import 'widgets/slide_transition.dart';

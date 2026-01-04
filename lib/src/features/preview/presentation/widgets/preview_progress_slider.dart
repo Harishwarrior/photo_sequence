@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../application/preview_controller.dart';
+import '../controllers/preview_controller.dart';
 
 /// Progress slider for preview timeline.
 class PreviewProgressSlider extends StatelessWidget {

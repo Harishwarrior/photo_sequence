@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:photo_sequence/src/features/home/domain/photo_sequence_project.dart';
 import 'package:photo_sequence/src/features/home/domain/transition_type.dart';
-import 'package:photo_sequence/src/features/preview/application/preview_controller.dart';
+import 'package:photo_sequence/src/features/preview/presentation/controllers/preview_controller.dart';
 
 void main() {
   // Create mock files for testing

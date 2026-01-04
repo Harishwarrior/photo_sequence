@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
-import '../../home/domain/photo_sequence_project.dart';
-import '../../home/domain/transition_type.dart';
-import '../../../core/utils/duration_calculator.dart';
+import '../../../home/domain/photo_sequence_project.dart';
+import '../../../home/domain/transition_type.dart';
+import '../../../../core/utils/duration_calculator.dart';
 
 /// Controller for managing preview playback of photo sequences.
 ///
@@ -78,7 +78,7 @@ class PreviewController extends ChangeNotifier {
         await _audioPlayer!.setReleaseMode(ReleaseMode.stop);
         _isAudioInitialized = true;
       } catch (e) {
-        print('Error initializing audio: $e');
+        debugPrint('Error initializing audio: $e');
         // Audio init failed, continue without audio
         _isAudioInitialized = false;
       }

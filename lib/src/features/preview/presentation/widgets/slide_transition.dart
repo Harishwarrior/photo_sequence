@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import '../../application/preview_controller.dart';
+import '../controllers/preview_controller.dart';
 
 /// Widget that displays a single photo with slide transition.
 class SlideTransitionWidget extends StatelessWidget {

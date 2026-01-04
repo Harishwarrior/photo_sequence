@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
 
@@ -44,9 +45,9 @@ Future<List<String>> compressImagesWorker(CompressionArgs args) async {
 
       if (result != null) {
         processedPaths.add(result.path);
-        print('Compressed: $imagePath -> ${result.path}');
+        debugPrint('Compressed: $imagePath -> ${result.path}');
       } else {
-        print('Compression returned null for $imagePath, trying fallback');
+        debugPrint('Compression returned null for $imagePath, trying fallback');
         // Try fallback compression
         final fallbackPath = await _fallbackConversion(
           imagePath,
@@ -56,11 +57,11 @@ Future<List<String>> compressImagesWorker(CompressionArgs args) async {
         if (fallbackPath != null) {
           processedPaths.add(fallbackPath);
         } else {
-          print('Fallback also failed for $imagePath');
+          debugPrint('Fallback also failed for $imagePath');
         }
       }
     } catch (e) {
-      print('Compression error for $imagePath: $e');
+      debugPrint('Compression error for $imagePath: $e');
       // Try fallback compression
       final fallbackPath = await _fallbackConversion(
         imagePath,
@@ -70,7 +71,7 @@ Future<List<String>> compressImagesWorker(CompressionArgs args) async {
       if (fallbackPath != null) {
         processedPaths.add(fallbackPath);
       } else {
-        print('Fallback also failed for $imagePath');
+        debugPrint('Fallback also failed for $imagePath');
       }
     }
   }
@@ -108,10 +109,10 @@ Future<String?> _fallbackConversion(
     final outputFile = File(outputPath);
     await outputFile.writeAsBytes(result);
 
-    print('Fallback conversion successful: $inputPath -> $outputPath');
+    debugPrint('Fallback conversion successful: $inputPath -> $outputPath');
     return outputPath;
   } catch (e) {
-    print('Fallback conversion error: $e');
+    debugPrint('Fallback conversion error: $e');
     return null;
   }
 }

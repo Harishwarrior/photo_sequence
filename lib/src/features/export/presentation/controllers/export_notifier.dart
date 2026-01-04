@@ -1,21 +1,10 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../home/domain/photo_sequence_project.dart';
-import '../data/export_service.dart';
+import '../../../home/domain/photo_sequence_project.dart';
+import '../../application/export_service.dart';
+import 'export_state.dart';
 
-part 'export_state.freezed.dart';
-part 'export_state.g.dart';
-
-/// State for the export screen.
-@freezed
-class ExportScreenState with _$ExportScreenState {
-  const factory ExportScreenState({
-    @Default(0.0) double progress,
-    @Default(ExportState.idle) ExportState state,
-    String? errorMessage,
-  }) = _ExportScreenState;
-}
+part 'export_notifier.g.dart';
 
 /// Provider for export screen state management.
 @riverpod

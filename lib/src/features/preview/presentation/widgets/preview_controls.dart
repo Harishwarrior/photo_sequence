@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../application/preview_controller.dart';
+import '../controllers/preview_controller.dart';
 import 'preview_playback_buttons.dart';
 import 'preview_progress_slider.dart';
 

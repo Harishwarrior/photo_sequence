@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../export/presentation/export_screen.dart';
 import '../../preview/presentation/preview_screen.dart';
-import '../application/home_state.dart';
+import 'controllers/home_notifier.dart';
 import 'widgets/music_section.dart';
 import 'widgets/photo_section.dart';
 import 'widgets/preview_button.dart';
