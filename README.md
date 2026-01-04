@@ -104,7 +104,7 @@ The project follows **Feature-First Clean Architecture** (inspired by [Code with
 
 | Package | Version | Purpose |
 | :--- | :--- | :--- |
-| `ffmpeg_kit_flutter_min_gpl` | ^6.0.3 | Video encoding with H.264 support |
+| `ffmpeg_kit_flutter_new_min_gpl` | ^2.1.1 | Video encoding with H.264 support |
 | `image_picker` | ^1.0.7 | System photo picker |
 | `file_picker` | ^8.0.0 | Audio file selection |
 | `audioplayers` | ^6.0.0 | Audio playback for preview |
@@ -113,12 +113,14 @@ The project follows **Feature-First Clean Architecture** (inspired by [Code with
 | `flutter_image_compress` | ^2.1.0 | Image pre-processing |
 | `equatable` | ^2.0.5 | Value equality for models |
 | `permission_handler` | ^11.3.0 | Permission management |
+| `flutter_riverpod` | ^2.5.1 | Reactive state management |
+| `logger` | ^2.6.2 | Diagnostic logging |
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter SDK ^3.10.4
+- Flutter SDK 3.38.5
 - Android SDK (for Android builds)
 - Xcode (for iOS builds)
 - [FVM](https://fvm.app/) (recommended for Flutter version management)
