@@ -6,22 +6,51 @@ part of 'media_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mediaRepositoryHash() => r'a182da2fdfae2af511a4eeaf33fa7c3bceee8980';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [mediaRepository].
 @ProviderFor(mediaRepository)
-final mediaRepositoryProvider = AutoDisposeProvider<IMediaRepository>.internal(
-  mediaRepository,
-  name: r'mediaRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$mediaRepositoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final mediaRepositoryProvider = MediaRepositoryProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef MediaRepositoryRef = AutoDisposeProviderRef<IMediaRepository>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class MediaRepositoryProvider
+    extends
+        $FunctionalProvider<
+          IMediaRepository,
+          IMediaRepository,
+          IMediaRepository
+        >
+    with $Provider<IMediaRepository> {
+  MediaRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mediaRepositoryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mediaRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<IMediaRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  IMediaRepository create(Ref ref) {
+    return mediaRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(IMediaRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<IMediaRepository>(value),
+    );
+  }
+}
+
+String _$mediaRepositoryHash() => r'a182da2fdfae2af511a4eeaf33fa7c3bceee8980';

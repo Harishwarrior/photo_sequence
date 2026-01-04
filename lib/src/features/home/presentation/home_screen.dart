@@ -15,8 +15,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(homeNotifierProvider);
-    final notifier = ref.read(homeNotifierProvider.notifier);
+    final state = ref.watch(homeProvider);
+    final notifier = ref.read(homeProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Photo Sequence')),
@@ -61,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Future<void> _openPreview(BuildContext context, WidgetRef ref) async {
-    final state = ref.read(homeNotifierProvider);
+    final state = ref.read(homeProvider);
     if (!state.canPreview) return;
 
     final shouldExport = await Navigator.of(context).push<bool>(

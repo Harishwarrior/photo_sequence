@@ -23,19 +23,19 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(exportNotifierProvider.notifier).startExport(widget.project);
+      ref.read(exportProvider.notifier).startExport(widget.project);
     });
   }
 
   void _handleCancel() async {
-    await ref.read(exportNotifierProvider.notifier).cancel();
+    await ref.read(exportProvider.notifier).cancel();
     if (mounted) {
       Navigator.of(context).pop();
     }
   }
 
   void _handleRetry() {
-    ref.read(exportNotifierProvider.notifier).retry(widget.project);
+    ref.read(exportProvider.notifier).retry(widget.project);
   }
 
   void _handleDone() {
@@ -44,7 +44,7 @@ class _ExportScreenState extends ConsumerState<ExportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(exportNotifierProvider);
+    final state = ref.watch(exportProvider);
 
     return Scaffold(
       backgroundColor: Colors.black,

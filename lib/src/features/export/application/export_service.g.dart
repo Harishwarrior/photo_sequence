@@ -6,22 +6,46 @@ part of 'export_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$exportServiceHash() => r'acd854c6de47a307a63980d9de520c6aca7dc24a';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [exportService].
 @ProviderFor(exportService)
-final exportServiceProvider = AutoDisposeProvider<ExportService>.internal(
-  exportService,
-  name: r'exportServiceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$exportServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final exportServiceProvider = ExportServiceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ExportServiceRef = AutoDisposeProviderRef<ExportService>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class ExportServiceProvider
+    extends $FunctionalProvider<ExportService, ExportService, ExportService>
+    with $Provider<ExportService> {
+  ExportServiceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'exportServiceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$exportServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExportService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExportService create(Ref ref) {
+    return exportService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExportService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExportService>(value),
+    );
+  }
+}
+
+String _$exportServiceHash() => r'acd854c6de47a307a63980d9de520c6aca7dc24a';
