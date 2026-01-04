@@ -1,30 +1,24 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// Widget tests are limited because FFmpegKit only supports iOS/Android.
+// Core logic tests are in:
+// - duration_calculator_test.dart
+// - ffmpeg_command_builder_test.dart
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:photo_sequence/main.dart';
+import 'package:photo_sequence/src/core/models/transition_type.dart';
+import 'package:photo_sequence/src/core/models/export_settings.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('Models', () {
+    test('TransitionType has correct FFmpeg values', () {
+      expect(TransitionType.dissolve.ffmpegValue, 'fade');
+      expect(TransitionType.slideLeft.ffmpegValue, 'slideleft');
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('ExportSettings presets have correct values', () {
+      expect(ExportSettings.hd720.width, 1280);
+      expect(ExportSettings.hd720.height, 720);
+      expect(ExportSettings.hd1080.width, 1920);
+      expect(ExportSettings.hd1080.height, 1080);
+    });
   });
 }
