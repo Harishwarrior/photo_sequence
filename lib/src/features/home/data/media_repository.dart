@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+
+import '../../../core/utils/app_logger.dart';
 
 /// Repository for picking media files (photos and audio).
 class MediaRepository {
@@ -23,7 +24,7 @@ class MediaRepository {
       return pickedFiles.map((xfile) => File(xfile.path)).toList();
     } catch (e) {
       // Handle permission denied or other errors
-      debugPrint('Error picking photos: $e');
+      AppLogger.e('Error picking photos: $e', e);
       return [];
     }
   }
@@ -49,7 +50,7 @@ class MediaRepository {
 
       return File(path);
     } catch (e) {
-      debugPrint('Error picking audio: $e');
+      AppLogger.e('Error picking audio: $e', e);
       return null;
     }
   }

@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path/path.dart' as p;
+
+import '../../../core/utils/app_logger.dart';
 
 /// Arguments for the compression worker
 class CompressionArgs {
@@ -45,9 +46,11 @@ Future<List<String>> compressImagesWorker(CompressionArgs args) async {
 
       if (result != null) {
         processedPaths.add(result.path);
-        debugPrint('Compressed: $imagePath -> ${result.path}');
+        AppLogger.d('Compressed: $imagePath -> ${result.path}');
       } else {
-        debugPrint('Compression returned null for $imagePath, trying fallback');
+        AppLogger.w(
+          'Compression returned null for $imagePath, trying fallback',
+        );
         // Try fallback compression
         final fallbackPath = await _fallbackConversion(
           imagePath,
@@ -57,11 +60,11 @@ Future<List<String>> compressImagesWorker(CompressionArgs args) async {
         if (fallbackPath != null) {
           processedPaths.add(fallbackPath);
         } else {
-          debugPrint('Fallback also failed for $imagePath');
+          AppLogger.e('Fallback also failed for $imagePath');
         }
       }
     } catch (e) {
-      debugPrint('Compression error for $imagePath: $e');
+      AppLogger.e('Compression error for $imagePath: $e', e);
       // Try fallback compression
       final fallbackPath = await _fallbackConversion(
         imagePath,
@@ -71,7 +74,7 @@ Future<List<String>> compressImagesWorker(CompressionArgs args) async {
       if (fallbackPath != null) {
         processedPaths.add(fallbackPath);
       } else {
-        debugPrint('Fallback also failed for $imagePath');
+        AppLogger.e('Fallback also failed for $imagePath');
       }
     }
   }
@@ -96,6 +99,10 @@ Future<String?> _fallbackConversion(
 
     // Convert to byte data
     final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+    // Dispose image immediately after extracting data
+    image.dispose();
+
     if (byteData == null) return null;
 
     // Re-compress as JPEG using flutter_image_compress with memory API
@@ -109,10 +116,10 @@ Future<String?> _fallbackConversion(
     final outputFile = File(outputPath);
     await outputFile.writeAsBytes(result);
 
-    debugPrint('Fallback conversion successful: $inputPath -> $outputPath');
+    AppLogger.d('Fallback conversion successful: $inputPath -> $outputPath');
     return outputPath;
   } catch (e) {
-    debugPrint('Fallback conversion error: $e');
+    AppLogger.e('Fallback conversion error: $e', e);
     return null;
   }
 }
