@@ -123,6 +123,7 @@ void main() {
           transition: TransitionType.dissolve,
           imageDurationSec: 3.0,
           transitionDurationSec: 1.0,
+          totalDuration: 5.0,
           settings: ExportSettings.hd720,
           outputPath: '/tmp/output.mp4',
         );
