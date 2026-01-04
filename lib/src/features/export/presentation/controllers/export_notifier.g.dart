@@ -6,7 +6,7 @@ part of 'export_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$exportNotifierHash() => r'2d12bff1b98e323a9cb58744513f7b9ae5a08c5b';
+String _$exportNotifierHash() => r'3f0efc9634487e2ef47a69bf4252515ee136a5a8';
 
 /// Provider for export screen state management.
 ///

@@ -4,13 +4,23 @@ import 'package:ffmpeg_kit_flutter_new_min_gpl/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new_min_gpl/ffmpeg_kit_config.dart';
 import 'package:ffmpeg_kit_flutter_new_min_gpl/return_code.dart';
 import 'package:ffmpeg_kit_flutter_new_min_gpl/statistics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../home/domain/photo_sequence_project.dart';
 import '../../../core/utils/ffmpeg_command_builder.dart';
+import '../domain/repositories/i_storage_repository.dart';
+import '../data/repositories/storage_repository.dart';
 import 'image_compressor.dart';
-import 'storage_service.dart';
+
+part 'export_service.g.dart';
+
+@riverpod
+ExportService exportService(Ref ref) {
+  return ExportService(storageRepository: ref.watch(storageRepositoryProvider));
+}
 
 /// Export state enum
 enum ExportState { idle, preprocessing, encoding, saving, completed, failed }
@@ -19,7 +29,10 @@ enum ExportState { idle, preprocessing, encoding, saving, completed, failed }
 class ExportService {
   final FfmpegCommandBuilder _commandBuilder = FfmpegCommandBuilder();
   final ImageCompressor _imageCompressor = ImageCompressor();
-  final StorageService _storageService = StorageService();
+  final IStorageRepository _storageRepository;
+
+  ExportService({required IStorageRepository storageRepository})
+    : _storageRepository = storageRepository;
 
   /// Current export state
   ExportState _state = ExportState.idle;
@@ -91,8 +104,8 @@ class ExportService {
       if (ReturnCode.isSuccess(returnCode)) {
         _updateState(ExportState.saving, onStateChange);
 
-        await _storageService.requestGalleryAccess();
-        await _storageService.saveVideoToGallery(outputPath);
+        await _storageRepository.requestGalleryAccess();
+        await _storageRepository.saveVideoToGallery(outputPath);
 
         _updateState(ExportState.completed, onStateChange);
         onComplete?.call(File(outputPath));

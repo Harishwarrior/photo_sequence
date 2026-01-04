@@ -9,7 +9,7 @@ part 'export_notifier.g.dart';
 /// Provider for export screen state management.
 @riverpod
 class ExportNotifier extends _$ExportNotifier {
-  final ExportService _exportService = ExportService();
+  ExportService get _exportService => ref.watch(exportServiceProvider);
 
   @override
   ExportScreenState build() {

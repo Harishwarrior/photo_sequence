@@ -1,15 +1,16 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../data/media_repository.dart';
 import '../../domain/transition_type.dart';
-import 'home_state.dart';
+import '../../domain/repositories/i_media_repository.dart';
+import '../../data/media_repository.dart';
+import 'home_state.dart'; // Assuming 'home_state.dart' is the correct file for HomeState
 
 part 'home_notifier.g.dart';
 
 /// Provider for home screen state management.
 @riverpod
 class HomeNotifier extends _$HomeNotifier {
-  final MediaRepository _mediaRepository = MediaRepository();
+  IMediaRepository get _mediaRepository => ref.watch(mediaRepositoryProvider);
 
   @override
   HomeState build() => const HomeState();

@@ -1,28 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'home_notifier.dart';
+part of 'storage_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeNotifierHash() => r'713606c71119e5b84aa46ebc3379e02eaa453b4f';
+String _$storageRepositoryHash() => r'91da67d050ce0eb6f5c273ed9f8fdd6d8677baff';
 
-/// Provider for home screen state management.
-///
-/// Copied from [HomeNotifier].
-@ProviderFor(HomeNotifier)
-final homeNotifierProvider =
-    AutoDisposeNotifierProvider<HomeNotifier, HomeState>.internal(
-      HomeNotifier.new,
-      name: r'homeNotifierProvider',
+/// See also [storageRepository].
+@ProviderFor(storageRepository)
+final storageRepositoryProvider =
+    AutoDisposeProvider<IStorageRepository>.internal(
+      storageRepository,
+      name: r'storageRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$homeNotifierHash,
+          : _$storageRepositoryHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$HomeNotifier = AutoDisposeNotifier<HomeState>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef StorageRepositoryRef = AutoDisposeProviderRef<IStorageRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

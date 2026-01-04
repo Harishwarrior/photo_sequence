@@ -4,13 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:photo_sequence/src/features/home/data/media_repository.dart';
 
 void main() {
-  late MediaRepository repository;
+  late MediaRepositoryImpl repository;
 
   // Create mock files for testing
   File mockFile(String name) => File('/mock/$name');
 
   setUp(() {
-    repository = MediaRepository();
+    repository = const MediaRepositoryImpl();
   });
 
   group('MediaRepository', () {
