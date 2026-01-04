@@ -10,7 +10,7 @@ A Flutter application that transforms 3-5 photos into a synchronized video with 
 ## Screenshots
 
 | Home Screen | Preview Screen | Export Screen |
-|:-----------:|:--------------:|:-------------:|
+| :---: | :---: | :---: |
 | ![Home](screenshots/home_screen.png) | ![Preview](screenshots/preview_screen.png) | ![Export](screenshots/export_screen.png) |
 
 ## Features
@@ -25,7 +25,7 @@ A Flutter application that transforms 3-5 photos into a synchronized video with 
 ## Supported Platforms
 
 | Platform | Status |
-|----------|--------|
+| :--- | :--- |
 | iOS | ✅ Supported |
 | Android | ✅ Supported |
 | macOS | ❌ Not Supported |
@@ -37,64 +37,73 @@ A Flutter application that transforms 3-5 photos into a synchronized video with 
 
 ```mermaid
 graph TB
-    subgraph UI["UI Layer"]
-        HS[HomeScreen]
-        PS[PreviewScreen]
-        ES[ExportScreen]
+    subgraph Presentation["Presentation Layer"]
+        subgraph Controllers["Notifiers & States"]
+            HN[HomeNotifier]
+            HS[HomeState]
+            EN[ExportNotifier]
+            ES[ExportScreenState]
+            PC[PreviewController]
+        end
+        subgraph UI["Widgets & Screens"]
+            HScr[HomeScreen]
+            PScr[PreviewScreen]
+            EScr[ExportScreen]
+        end
     end
     
-    subgraph Preview["Preview Engine"]
-        PC[PreviewController]
-        DT[DissolveTransition]
-        ST[SlideTransition]
-    end
-    
-    subgraph Export["Export Engine"]
-        FCB[FfmpegCommandBuilder]
+    subgraph Application["Application Layer (Services)"]
         EXS[ExportService]
         IC[ImageCompressor]
-    end
-    
-    subgraph Data["Data Layer"]
-        MR[MediaRepository]
+        CW[CompressionWorker]
         SS[StorageService]
     end
-    
-    subgraph External["External Libraries"]
-        FFmpeg[FFmpegKit]
-        Gal[gal Package]
-        IP[ImagePicker]
+
+    subgraph Domain["Domain Layer (Models)"]
+        PSP[PhotoSequenceProject]
+        ESet[ExportSettings]
+        TT[TransitionType]
     end
     
-    HS --> MR
-    HS --> PS
-    PS --> PC
-    PC --> DT
-    PC --> ST
-    PS --> ES
-    ES --> EXS
+    subgraph Data["Data Layer (Repositories)"]
+        MR[MediaRepository]
+    end
+    
+    subgraph Core["Core (Utilities)"]
+        FCB[FfmpegCommandBuilder]
+        DC[DurationCalculator]
+    end
+
+    HScr --> HN
+    HN --> HS
+    HN --> MR
+    PScr --> PC
+    PC --> PSP
+    EScr --> EN
+    EN --> ES
+    EN --> EXS
     EXS --> FCB
     EXS --> IC
+    IC --> CW
     EXS --> SS
-    MR --> IP
-    SS --> Gal
-    EXS --> FFmpeg
+    PSP --> ESet
+    PSP --> TT
 ```
 
-### Key Components
+### Architectural Principles
 
-| Component | Description |
-|-----------|-------------|
-| `FfmpegCommandBuilder` | Constructs FFmpeg filter graphs with xfade transitions |
-| `PreviewController` | Master animation controller with audio sync |
-| `ExportService` | Manages async FFmpeg sessions with progress callbacks |
-| `ImageCompressor` | Resizes large images to prevent OOM errors |
-| `StorageService` | Handles gallery saving with Scoped Storage compliance |
+The project follows **Feature-First Clean Architecture**:
+
+- **Presentation Layer**: Riverpod Notifiers (Logic), Freezed States (Data), and Flutter Widgets (UI).
+- **Application Layer**: Services that orchestrate business logic and interact with external plugins.
+- **Domain Layer**: Pure Dart entities and business rules, independent of any framework.
+- **Data Layer**: Repository implementations and data sources.
+- **Core Layer**: Shared utilities and low-level engine logic (FFmpeg building, duration math).
 
 ## Dependencies
 
 | Package | Version | Purpose |
-|---------|---------|---------|
+| :--- | :--- | :--- |
 | `ffmpeg_kit_flutter_min_gpl` | ^6.0.3 | Video encoding with H.264 support |
 | `image_picker` | ^1.0.7 | System photo picker |
 | `file_picker` | ^8.0.0 | Audio file selection |
@@ -157,41 +166,44 @@ fvm flutter test
 fvm flutter test --coverage
 ```
 
-## Project Structure (Clean Architecture)
+## Project Structure
 
-```
+```text
 lib/src/
 ├── app.dart
-├── core/utils/                           # Shared utilities
+├── core/utils/                           # Shared utilities (FFmpeg Engine)
 │   ├── duration_calculator.dart
 │   └── ffmpeg_command_builder.dart
 └── features/
     ├── home/
-    │   ├── domain/                       # Entities & value objects
+    │   ├── domain/                       # Models & Enums
     │   │   ├── export_settings.dart
     │   │   ├── photo_sequence_project.dart
     │   │   └── transition_type.dart
-    │   ├── data/                         # Repository implementations
+    │   ├── data/                         # Repositories
     │   │   └── media_repository.dart
-    │   ├── application/                  # State management
-    │   │   └── home_state.dart
-    │   └── presentation/                 # UI
+    │   └── presentation/                 # UI & State Management
+    │       ├── controllers/
+    │       │   ├── home_notifier.dart    # Riverpod Notifier
+    │       │   └── home_state.dart       # Freezed State
     │       ├── home_screen.dart
     │       └── widgets/
     ├── preview/
-    │   ├── application/
-    │   │   └── preview_controller.dart
     │   └── presentation/
+    │       ├── controllers/
+    │       │   └── preview_controller.dart
     │       ├── preview_screen.dart
     │       └── widgets/
     └── export/
-        ├── data/
+        ├── application/                  # Business Logic (Services)
+        │   ├── compression_worker.dart
         │   ├── export_service.dart
         │   ├── image_compressor.dart
         │   └── storage_service.dart
-        ├── application/
-        │   └── export_state.dart
         └── presentation/
+            ├── controllers/
+            │   ├── export_notifier.dart
+            │   └── export_state.dart
             ├── export_screen.dart
             └── widgets/
 ```
@@ -202,7 +214,7 @@ lib/src/
 
 The total video duration is calculated using:
 
-```
+```text
 T_total = (N × D_img) - ((N-1) × D_trans)
 ```
 
@@ -216,7 +228,7 @@ Where:
 
 Transition offsets are calculated recursively:
 
-```
+```text
 O₁ = D_img - D_trans
 Oᵢ = Oᵢ₋₁ + D_img - D_trans
 ```
