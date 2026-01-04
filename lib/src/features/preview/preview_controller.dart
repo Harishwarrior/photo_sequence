@@ -50,6 +50,7 @@ class PreviewController extends ChangeNotifier {
     _masterController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _isPlaying = false;
+        _audioPlayer?.stop();
         notifyListeners();
       }
     });
@@ -72,8 +73,10 @@ class PreviewController extends ChangeNotifier {
         await _audioPlayer!.setSource(
           DeviceFileSource(project.backgroundMusic!.path),
         );
+        await _audioPlayer!.setReleaseMode(ReleaseMode.stop);
         _isAudioInitialized = true;
       } catch (e) {
+        print('Error initializing audio: $e');
         // Audio init failed, continue without audio
         _isAudioInitialized = false;
       }
@@ -83,6 +86,13 @@ class PreviewController extends ChangeNotifier {
   /// Play the preview from current position
   Future<void> play() async {
     if (_masterController == null) return;
+
+    if (_masterController!.status == AnimationStatus.completed) {
+      _masterController!.reset();
+      if (_isAudioInitialized && _audioPlayer != null) {
+        await _audioPlayer!.seek(Duration.zero);
+      }
+    }
 
     _isPlaying = true;
     _masterController!.forward();
