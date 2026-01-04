@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.svg" alt="Photo Sequence Logo" width="120" height="120">
+</p>
+
 # Photo Sequence
 
 A Flutter application that transforms 3-5 photos into a synchronized video with professional dissolve/slide transitions and background music, exported as a high-fidelity .mp4 file.
@@ -6,10 +10,9 @@ A Flutter application that transforms 3-5 photos into a synchronized video with 
 
 ## Screenshots
 
-<!-- Add your screenshots here -->
 | Home Screen | Preview Screen | Export Screen |
 |:-----------:|:--------------:|:-------------:|
-| ![Home](screenshots/home.png) | ![Preview](screenshots/preview.png) | ![Export](screenshots/export.png) |
+| ![Home](screenshots/home_screen.png) | ![Preview](screenshots/preview_screen.png) | ![Export](screenshots/export_screen.png) |
 
 ## Features
 
@@ -155,37 +158,43 @@ fvm flutter test
 fvm flutter test --coverage
 ```
 
-## Project Structure
+## Project Structure (Clean Architecture)
 
 ```
-lib/
-├── main.dart
-└── src/
-    ├── app.dart                          # App configuration
-    ├── core/
-    │   ├── models/
-    │   │   ├── export_settings.dart      # Video export settings
+lib/src/
+├── app.dart
+├── core/utils/                           # Shared utilities
+│   ├── duration_calculator.dart
+│   └── ffmpeg_command_builder.dart
+└── features/
+    ├── home/
+    │   ├── domain/                       # Entities & value objects
+    │   │   ├── export_settings.dart
     │   │   ├── photo_sequence_project.dart
-    │   │   └── transition_type.dart      # Transition enum
-    │   ├── services/
-    │   │   ├── export_service.dart       # FFmpeg export manager
-    │   │   ├── image_compressor.dart     # Image preprocessing
-    │   │   ├── media_repository.dart     # File picking
-    │   │   └── storage_service.dart      # Gallery saving
-    │   └── utils/
-    │       ├── duration_calculator.dart  # Timing math
-    │       └── ffmpeg_command_builder.dart
-    └── features/
-        ├── home/
-        │   └── home_screen.dart
-        ├── preview/
-        │   ├── preview_controller.dart
-        │   ├── preview_screen.dart
-        │   └── widgets/
-        │       ├── dissolve_transition.dart
-        │       └── slide_transition.dart
-        └── export/
-            └── export_screen.dart
+    │   │   └── transition_type.dart
+    │   ├── data/                         # Repository implementations
+    │   │   └── media_repository.dart
+    │   ├── application/                  # State management
+    │   │   └── home_state.dart
+    │   └── presentation/                 # UI
+    │       ├── home_screen.dart
+    │       └── widgets/
+    ├── preview/
+    │   ├── application/
+    │   │   └── preview_controller.dart
+    │   └── presentation/
+    │       ├── preview_screen.dart
+    │       └── widgets/
+    └── export/
+        ├── data/
+        │   ├── export_service.dart
+        │   ├── image_compressor.dart
+        │   └── storage_service.dart
+        ├── application/
+        │   └── export_state.dart
+        └── presentation/
+            ├── export_screen.dart
+            └── widgets/
 ```
 
 ## Technical Details

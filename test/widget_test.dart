@@ -4,8 +4,8 @@
 // - ffmpeg_command_builder_test.dart
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:photo_sequence/src/core/models/transition_type.dart';
-import 'package:photo_sequence/src/core/models/export_settings.dart';
+import 'package:photo_sequence/src/features/home/domain/transition_type.dart';
+import 'package:photo_sequence/src/features/home/domain/export_settings.dart';
 
 void main() {
   group('Models', () {

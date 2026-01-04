@@ -1,5 +1,5 @@
-import '../models/export_settings.dart';
-import '../models/transition_type.dart';
+import '../../features/home/domain/export_settings.dart';
+import '../../features/home/domain/transition_type.dart';
 
 /// Builds FFmpeg commands for photo sequence video generation.
 ///

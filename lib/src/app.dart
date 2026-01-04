@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'features/home/home_screen.dart';
+import 'features/home/presentation/home_screen.dart';
 
 /// Main application widget.
 class PhotoSequenceApp extends StatelessWidget {
