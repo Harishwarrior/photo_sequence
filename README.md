@@ -92,7 +92,7 @@ graph TB
 
 ### Architectural Principles
 
-The project follows **Feature-First Clean Architecture**:
+The project follows **Feature-First Clean Architecture** (inspired by [Code with Andrea's Riverpod Architecture](https://codewithandrea.com/articles/flutter-app-architecture-riverpod-introduction/)):
 
 - **Presentation Layer**: Riverpod Notifiers (Logic), Freezed States (Data), and Flutter Widgets (UI).
 - **Application Layer**: Services that orchestrate business logic and interact with external plugins.
