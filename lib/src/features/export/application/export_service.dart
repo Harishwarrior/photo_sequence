@@ -28,6 +28,7 @@ class ExportService {
   /// Cancel the current export.
   Future<void> cancel() async {
     await FFmpegKit.cancel();
+    FFmpegKitConfig.enableStatisticsCallback(null);
     _state = ExportState.idle;
   }
 
@@ -104,6 +105,9 @@ class ExportService {
     } catch (e) {
       _updateState(ExportState.failed, onStateChange);
       onError?.call('Export failed: $e');
+    } finally {
+      // CRITICAL: Clear global callback to prevent memory leaks and closure captures
+      FFmpegKitConfig.enableStatisticsCallback(null);
     }
   }
 

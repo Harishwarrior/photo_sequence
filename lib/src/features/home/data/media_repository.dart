@@ -14,6 +14,17 @@ class MediaRepository {
   /// Returns a list of File objects or empty list if cancelled.
   Future<List<File>> pickPhotos({int maxImages = 5}) async {
     try {
+      if (maxImages <= 0) return [];
+
+      // pickMultiImage requires limit >= 2. If 1, use pickImage.
+      if (maxImages == 1) {
+        final XFile? pickedFile = await _imagePicker.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 100,
+        );
+        return pickedFile != null ? [File(pickedFile.path)] : [];
+      }
+
       final List<XFile> pickedFiles = await _imagePicker.pickMultiImage(
         limit: maxImages,
         imageQuality: 100,

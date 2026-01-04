@@ -12,7 +12,12 @@ class ExportNotifier extends _$ExportNotifier {
   final ExportService _exportService = ExportService();
 
   @override
-  ExportScreenState build() => const ExportScreenState();
+  ExportScreenState build() {
+    ref.onDispose(() {
+      _exportService.cancel();
+    });
+    return const ExportScreenState();
+  }
 
   Future<void> startExport(PhotoSequenceProject project) async {
     state = const ExportScreenState();
