@@ -17,7 +17,7 @@ class PhotoThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ReorderableDragStartListener(
+    return ReorderableDelayedDragStartListener(
       index: index,
       child: Container(
         width: 80,
