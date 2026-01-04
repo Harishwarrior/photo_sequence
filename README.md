@@ -1,8 +1,7 @@
-<p align="center">
-  <img src="assets/logo.svg" alt="Photo Sequence Logo" width="120" height="120">
-</p>
 
 # Photo Sequence
+
+![Photo Sequence Logo](assets/logo.svg)
 
 A Flutter application that transforms 3-5 photos into a synchronized video with professional dissolve/slide transitions and background music, exported as a high-fidelity .mp4 file.
 
