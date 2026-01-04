@@ -18,7 +18,7 @@ class StorageService {
       return false;
     }
   }
- 
+
   /// Request gallery access permission if needed.
   ///
   /// On Android 13+, writing to gallery doesn't require permission
