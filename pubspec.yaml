@@ -9,16 +9,15 @@ environment:
 dependencies:
   audioplayers: ^6.0.0
   cupertino_icons: ^1.0.8
-  equatable: ^2.0.5
   ffmpeg_kit_flutter_new_min_gpl: ^2.1.1
   file_picker: ^8.0.0
   flutter:
     sdk: flutter
   flutter_image_compress: ^2.1.0
   flutter_riverpod: ^2.5.1
-  freezed_annotation: ^2.4.1
   gal: ^2.3.0
   image_picker: ^1.0.7
+  json_annotation: ^4.8.1
   logger: ^2.6.2
   path: ^1.9.0
   path_provider: ^2.1.2
@@ -30,7 +29,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  freezed: ^2.5.2
   json_serializable: ^6.7.1
   riverpod_generator: ^2.4.0
 

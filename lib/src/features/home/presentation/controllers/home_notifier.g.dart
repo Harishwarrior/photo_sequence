@@ -6,7 +6,7 @@ part of 'home_notifier.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeNotifierHash() => r'713606c71119e5b84aa46ebc3379e02eaa453b4f';
+String _$homeNotifierHash() => r'63e3398f6c85cd27d9c547b68731606332340782';
 
 /// Provider for home screen state management.
 ///

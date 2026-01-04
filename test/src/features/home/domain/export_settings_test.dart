@@ -113,17 +113,5 @@ void main() {
         expect(preset, equals(manual));
       });
     });
-
-    group('props', () {
-      test('props contains all properties', () {
-        const settings = ExportSettings(
-          width: 1280,
-          height: 720,
-          frameRate: 30,
-          bitrate: 5000,
-        );
-        expect(settings.props, [1280, 720, 30, 5000]);
-      });
-    });
   });
 }

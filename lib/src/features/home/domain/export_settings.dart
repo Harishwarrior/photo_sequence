@@ -1,7 +1,10 @@
-import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'export_settings.g.dart';
 
 /// Export settings for video generation.
-class ExportSettings extends Equatable {
+@JsonSerializable()
+class ExportSettings {
   /// Target video width in pixels
   final int width;
 
@@ -40,6 +43,36 @@ class ExportSettings extends Equatable {
   /// Resolution string for FFmpeg
   String get resolution => '${width}x$height';
 
+  ExportSettings copyWith({
+    int? width,
+    int? height,
+    int? frameRate,
+    int? bitrate,
+  }) {
+    return ExportSettings(
+      width: width ?? this.width,
+      height: height ?? this.height,
+      frameRate: frameRate ?? this.frameRate,
+      bitrate: bitrate ?? this.bitrate,
+    );
+  }
+
+  factory ExportSettings.fromJson(Map<String, dynamic> json) =>
+      _$ExportSettingsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExportSettingsToJson(this);
+
   @override
-  List<Object?> get props => [width, height, frameRate, bitrate];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ExportSettings &&
+          runtimeType == other.runtimeType &&
+          width == other.width &&
+          height == other.height &&
+          frameRate == other.frameRate &&
+          bitrate == other.bitrate;
+
+  @override
+  int get hashCode =>
+      width.hashCode ^ height.hashCode ^ frameRate.hashCode ^ bitrate.hashCode;
 }

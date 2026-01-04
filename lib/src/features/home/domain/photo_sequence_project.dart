@@ -1,16 +1,20 @@
 import 'dart:io';
-
-import 'package:equatable/equatable.dart';
-
+import 'package:json_annotation/json_annotation.dart';
+import '../../../core/utils/json_converters.dart';
 import 'export_settings.dart';
 import 'transition_type.dart';
 
+part 'photo_sequence_project.g.dart';
+
 /// Represents a photo sequence project with all configuration.
-class PhotoSequenceProject extends Equatable {
+@JsonSerializable()
+@FileConverter()
+class PhotoSequenceProject {
   /// List of photos to include (3-5 photos)
   final List<File> photos;
 
   /// Optional background music file
+  @NullableFileConverter()
   final File? backgroundMusic;
 
   /// Type of transition between photos
@@ -35,9 +39,6 @@ class PhotoSequenceProject extends Equatable {
   });
 
   /// Total duration of the sequence.
-  ///
-  /// Formula: (N × D_img) - ((N-1) × D_trans)
-  /// Example: 3 images × 3s - 2 transitions × 1s = 7 seconds
   Duration get totalDuration {
     if (photos.isEmpty) return Duration.zero;
     final imageMs = imageDuration.inMilliseconds * photos.length;
@@ -46,20 +47,13 @@ class PhotoSequenceProject extends Equatable {
     return Duration(milliseconds: imageMs - transitionMs);
   }
 
-  /// Total duration in seconds as double
   double get totalDurationSeconds => totalDuration.inMilliseconds / 1000.0;
-
-  /// Image duration in seconds as double
   double get imageDurationSeconds => imageDuration.inMilliseconds / 1000.0;
-
-  /// Transition duration in seconds as double
   double get transitionDurationSeconds =>
       transitionDuration.inMilliseconds / 1000.0;
 
-  /// Whether the project is valid for export (3-5 photos)
   bool get isValid => photos.length >= 3 && photos.length <= 5;
 
-  /// Create a copy with updated values
   PhotoSequenceProject copyWith({
     List<File>? photos,
     File? backgroundMusic,
@@ -81,13 +75,37 @@ class PhotoSequenceProject extends Equatable {
     );
   }
 
+  factory PhotoSequenceProject.fromJson(Map<String, dynamic> json) =>
+      _$PhotoSequenceProjectFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PhotoSequenceProjectToJson(this);
+
   @override
-  List<Object?> get props => [
-    photos,
-    backgroundMusic,
-    transitionType,
-    imageDuration,
-    transitionDuration,
-    exportSettings,
-  ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PhotoSequenceProject &&
+          runtimeType == other.runtimeType &&
+          _listEquals(photos, other.photos) &&
+          backgroundMusic?.path == other.backgroundMusic?.path &&
+          transitionType == other.transitionType &&
+          imageDuration == other.imageDuration &&
+          transitionDuration == other.transitionDuration &&
+          exportSettings == other.exportSettings;
+
+  @override
+  int get hashCode =>
+      photos.hashCode ^
+      backgroundMusic.hashCode ^
+      transitionType.hashCode ^
+      imageDuration.hashCode ^
+      transitionDuration.hashCode ^
+      exportSettings.hashCode;
+
+  bool _listEquals(List<File> a, List<File> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i].path != b[i].path) return false;
+    }
+    return true;
+  }
 }
