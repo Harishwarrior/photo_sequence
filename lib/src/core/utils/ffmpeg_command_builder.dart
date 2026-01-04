@@ -35,6 +35,8 @@ class FfmpegCommandBuilder {
     // Input streams for images with loop and duration
     for (final path in imagePaths) {
       args.addAll([
+        '-f',
+        'image2',
         '-loop',
         '1',
         '-t',
@@ -98,6 +100,7 @@ class FfmpegCommandBuilder {
     required TransitionType transition,
     required double imageDurationSec,
     required double transitionDurationSec,
+    required double totalDuration,
     required ExportSettings settings,
     required String outputPath,
   }) {
@@ -110,6 +113,8 @@ class FfmpegCommandBuilder {
     // Input streams for images with loop and duration
     for (final path in imagePaths) {
       args.addAll([
+        '-f',
+        'image2',
         '-loop',
         '1',
         '-t',
@@ -147,17 +152,19 @@ class FfmpegCommandBuilder {
       '-c:v',
       'libx264',
       '-preset',
-      'medium',
+      'ultrafast',
       '-crf',
       '23',
       '-pix_fmt',
       'yuv420p',
       '-r',
       settings.frameRate.toString(),
+      '-t',
+      totalDuration.toString(),
     ]);
 
     if (audioPath != null) {
-      args.addAll(['-c:a', 'aac', '-b:a', '192k', '-shortest']);
+      args.addAll(['-c:a', 'aac', '-b:a', '192k']);
     }
 
     // Output file (overwrite if exists)

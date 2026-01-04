@@ -30,11 +30,15 @@ class MediaRepository {
   /// Pick a single audio file for background music.
   ///
   /// Returns the selected file or null if cancelled.
+  /// Uses custom file type to avoid iOS Music Library iCloud caching issues.
   Future<File?> pickAudio() async {
     try {
       final result = await FilePicker.platform.pickFiles(
-        type: FileType.audio,
+        type: FileType.custom,
+        allowedExtensions: ['mp3', 'aac', 'm4a', 'wav', 'ogg', 'flac'],
         allowMultiple: false,
+        withData: false,
+        withReadStream: false,
       );
 
       if (result == null || result.files.isEmpty) return null;

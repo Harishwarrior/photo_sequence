@@ -1,13 +1,14 @@
 import 'dart:io';
 
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
+
+import 'compression_worker.dart';
 
 /// Service for compressing and resizing images before FFmpeg processing.
 ///
 /// This prevents OOM (Out of Memory) errors when processing high-resolution
 /// photos (e.g., 108MP images from modern phones).
+/// Also ensures all images are converted to JPEG format for FFmpeg compatibility.
 class ImageCompressor {
   /// Maximum dimension (width or height) for processed images.
   static const int maxDimension = 1920;
@@ -16,37 +17,21 @@ class ImageCompressor {
   static const int quality = 95;
 
   /// Compress and resize images to a maximum dimension.
+  /// All images are converted to JPEG format for FFmpeg min_gpl compatibility.
   ///
-  /// Returns a list of paths to the processed images in the temp directory.
+  /// Returns a list of paths to the processed JPEG images in the temp directory.
   Future<List<String>> compressImages(List<File> images) async {
     final tempDir = await getTemporaryDirectory();
-    final processedPaths = <String>[];
 
-    for (int i = 0; i < images.length; i++) {
-      final image = images[i];
-      final outputPath = p.join(
-        tempDir.path,
-        'photo_sequence_${i}_${DateTime.now().millisecondsSinceEpoch}.jpg',
-      );
+    final args = CompressionArgs(
+      imagePaths: images.map((f) => f.path).toList(),
+      tempDirPath: tempDir.path,
+      maxDimension: maxDimension,
+      quality: quality,
+    );
 
-      final result = await FlutterImageCompress.compressAndGetFile(
-        image.path,
-        outputPath,
-        minWidth: maxDimension,
-        minHeight: maxDimension,
-        quality: quality,
-        keepExif: false,
-      );
-
-      if (result != null) {
-        processedPaths.add(result.path);
-      } else {
-        // If compression fails, use original
-        processedPaths.add(image.path);
-      }
-    }
-
-    return processedPaths;
+    // Run on main isolate because FlutterImageCompress uses platform channels
+    return compressImagesWorker(args);
   }
 
   /// Clean up temporary processed images.

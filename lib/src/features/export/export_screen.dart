@@ -146,11 +146,21 @@ class ExportProgressContent extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              CircularProgressIndicator(
-                value: state == ExportState.preprocessing ? null : progress,
-                strokeWidth: 8,
-                backgroundColor: Colors.white12,
-                color: Colors.white,
+              TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                tween: Tween<double>(
+                  begin: 0,
+                  end: state == ExportState.preprocessing ? 0 : progress,
+                ),
+                builder: (context, value, _) {
+                  return CircularProgressIndicator(
+                    value: state == ExportState.preprocessing ? null : value,
+                    strokeWidth: 8,
+                    backgroundColor: Colors.white12,
+                    color: Colors.white,
+                  );
+                },
               ),
               Center(
                 child: Text(

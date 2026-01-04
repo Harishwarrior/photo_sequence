@@ -71,6 +71,7 @@ class ExportService {
         transition: project.transitionType,
         imageDurationSec: project.imageDurationSeconds,
         transitionDurationSec: project.transitionDurationSeconds,
+        totalDuration: project.totalDurationSeconds,
         settings: project.exportSettings,
         outputPath: outputPath,
       );
@@ -101,6 +102,8 @@ class ExportService {
         // Step 4: Save to gallery
         _updateState(ExportState.saving, onStateChange);
 
+        // Ensure we have permission
+        await _storageService.requestGalleryAccess();
         final saved = await _storageService.saveVideoToGallery(outputPath);
 
         if (saved) {

@@ -25,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TransitionType _transitionType = TransitionType.dissolve;
   Duration _imageDuration = const Duration(seconds: 3);
   Duration _transitionDuration = const Duration(seconds: 1);
+  bool _isPicking = false;
 
   bool get _canPreview => _selectedPhotos.length >= 3;
 
@@ -38,26 +39,54 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   Future<void> _pickPhotos() async {
+    if (_isPicking) return;
+
     final maxToSelect = 5 - _selectedPhotos.length;
     if (maxToSelect <= 0) return;
 
-    final photos = await _mediaRepository.pickPhotos(maxImages: maxToSelect);
-    if (photos.isNotEmpty) {
-      setState(() {
-        _selectedPhotos.addAll(photos);
-        if (_selectedPhotos.length > 5) {
-          _selectedPhotos = _selectedPhotos.sublist(0, 5);
-        }
-      });
+    setState(() {
+      _isPicking = true;
+    });
+
+    try {
+      final photos = await _mediaRepository.pickPhotos(maxImages: maxToSelect);
+      if (photos.isNotEmpty) {
+        setState(() {
+          _selectedPhotos.addAll(photos);
+          if (_selectedPhotos.length > 5) {
+            _selectedPhotos = _selectedPhotos.sublist(0, 5);
+          }
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPicking = false;
+        });
+      }
     }
   }
 
   Future<void> _pickMusic() async {
-    final audio = await _mediaRepository.pickAudio();
-    if (audio != null) {
-      setState(() {
-        _backgroundMusic = audio;
-      });
+    if (_isPicking) return;
+
+    setState(() {
+      _isPicking = true;
+    });
+
+    try {
+      final audio = await _mediaRepository.pickAudio();
+      if (audio != null) {
+        setState(() {
+          _backgroundMusic = audio;
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isPicking = false;
+        });
+      }
     }
   }
 
@@ -134,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             PhotoSection(
               photos: _selectedPhotos,
+              isLoading: _isPicking,
               onPickPhotos: _pickPhotos,
               onRemovePhoto: _removePhoto,
               onReorder: _reorderPhotos,
@@ -141,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
             MusicSection(
               backgroundMusic: _backgroundMusic,
+              isLoading: _isPicking,
               onPickMusic: _pickMusic,
               onClearMusic: _clearMusic,
             ),
@@ -171,12 +202,14 @@ class PhotoSection extends StatelessWidget {
   const PhotoSection({
     super.key,
     required this.photos,
+    required this.isLoading,
     required this.onPickPhotos,
     required this.onRemovePhoto,
     required this.onReorder,
   });
 
   final List<File> photos;
+  final bool isLoading;
   final VoidCallback onPickPhotos;
   final void Function(int index) onRemovePhoto;
   final void Function(int oldIndex, int newIndex) onReorder;
@@ -217,6 +250,7 @@ class PhotoSection extends StatelessWidget {
         const SizedBox(height: 12),
         PhotoGrid(
           photos: photos,
+          isLoading: isLoading,
           onPickPhotos: onPickPhotos,
           onRemovePhoto: onRemovePhoto,
           onReorder: onReorder,
@@ -231,12 +265,14 @@ class PhotoGrid extends StatelessWidget {
   const PhotoGrid({
     super.key,
     required this.photos,
+    required this.isLoading,
     required this.onPickPhotos,
     required this.onRemovePhoto,
     required this.onReorder,
   });
 
   final List<File> photos;
+  final bool isLoading;
   final VoidCallback onPickPhotos;
   final void Function(int index) onRemovePhoto;
   final void Function(int oldIndex, int newIndex) onReorder;
@@ -271,11 +307,26 @@ class PhotoGrid extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
-          AddPhotoButton(
-            isDisabled: photos.length >= 5,
-            isEmpty: photos.isEmpty,
-            onTap: onPickPhotos,
-          ),
+          if (isLoading)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white54,
+                  ),
+                ),
+              ),
+            )
+          else
+            AddPhotoButton(
+              isDisabled: photos.length >= 5,
+              isEmpty: photos.isEmpty,
+              onTap: onPickPhotos,
+            ),
         ],
       ),
     );
@@ -405,11 +456,13 @@ class MusicSection extends StatelessWidget {
   const MusicSection({
     super.key,
     required this.backgroundMusic,
+    required this.isLoading,
     required this.onPickMusic,
     required this.onClearMusic,
   });
 
   final File? backgroundMusic;
+  final bool isLoading;
   final VoidCallback onPickMusic;
   final VoidCallback onClearMusic;
 
@@ -435,40 +488,63 @@ class MusicSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ListTile(
-            leading: Icon(
-              backgroundMusic != null
-                  ? Icons.music_note
-                  : Icons.music_note_outlined,
-              color: backgroundMusic != null ? Colors.green : Colors.white54,
+        InkWell(
+          onTap: backgroundMusic == null && !isLoading ? onPickMusic : null,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF1E1E1E),
+              borderRadius: BorderRadius.circular(12),
             ),
-            title: Text(
-              backgroundMusic != null
-                  ? backgroundMusic!.path.split('/').last
-                  : 'No music selected',
-              style: TextStyle(
-                color: backgroundMusic != null ? Colors.white : Colors.white54,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (backgroundMusic != null)
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white54),
-                    onPressed: onClearMusic,
-                  ),
-                IconButton(
-                  icon: const Icon(Icons.folder_open, color: Colors.white54),
-                  onPressed: onPickMusic,
+            child: ListTile(
+              leading: isLoading
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white54,
+                      ),
+                    )
+                  : Icon(
+                      backgroundMusic != null
+                          ? Icons.music_note
+                          : Icons.music_note_outlined,
+                      color: backgroundMusic != null
+                          ? Colors.green
+                          : Colors.white54,
+                    ),
+              title: Text(
+                isLoading
+                    ? 'Loading...'
+                    : backgroundMusic != null
+                    ? backgroundMusic!.path.split('/').last
+                    : 'Tap to select music',
+                style: TextStyle(
+                  color: backgroundMusic != null
+                      ? Colors.white
+                      : Colors.white54,
                 ),
-              ],
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing: backgroundMusic != null && !isLoading
+                  ? Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white54),
+                          onPressed: onClearMusic,
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.folder_open,
+                            color: Colors.white54,
+                          ),
+                          onPressed: onPickMusic,
+                        ),
+                      ],
+                    )
+                  : null,
             ),
           ),
         ),
