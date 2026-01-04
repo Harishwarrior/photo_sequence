@@ -19,13 +19,7 @@ class HomeScreen extends ConsumerWidget {
     final notifier = ref.read(homeNotifierProvider.notifier);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E1E1E),
-        foregroundColor: Colors.white,
-        title: const Text('Photo Sequence'),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text('Photo Sequence')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
